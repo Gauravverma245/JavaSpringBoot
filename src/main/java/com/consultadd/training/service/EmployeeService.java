@@ -1,10 +1,14 @@
 package com.consultadd.training.service;
 
 
+import com.consultadd.training.CustomUserDetails;
 import com.consultadd.training.model.Employee;
 import com.consultadd.training.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -13,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import java.util.List;
 
 @Service
-public class EmployeeService {
+public class EmployeeService implements UserDetailsService {
 
     @Autowired
     EmployeeRepository employeeRepository;
@@ -54,7 +58,14 @@ public class EmployeeService {
     }
 
 
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Employee user = employeeRepository.findByUsername(username);
+        if(user == null){
+            throw new UsernameNotFoundException("User Not Found");
+        }
 
+        return new CustomUserDetails(user);
 
-
+    }
 }
