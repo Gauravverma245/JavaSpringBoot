@@ -11,7 +11,6 @@ import java.util.Collections;
 
 public class CustomUserDetails implements UserDetails {
 
-
     private Employee user;
 
     public CustomUserDetails(Employee user) {
